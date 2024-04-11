@@ -1,31 +1,50 @@
 
-from django.views import View
+from django.views.generic import TemplateView, FormView
+from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-import pandas as pd
-from openpyxl import load_workbook
+from django.urls import reverse
+import os
 
-class UploadView(View):
+
+from .models import amwell_BOA_bank_rec
+from .forms import BankForm
+from .data_processing import BankCleanData
+
+class UploadView(FormView):
+    model = amwell_BOA_bank_rec
     template_name = 'upload.html'
+    form_class = BankForm
 
-    def get(self, request):
-        return render(request, self.template_name)
+    def form_valid(self, form):
+        # get csv file from form
+        file = form.cleaned_data['csv_upload']
 
-    def post(self, request):
-        csv_file = request.FILES['csv_file']
-        excel_file = request.FILES['excel_file']
+        # clean data in cvs file
+        bank_clean_data = BankCleanData(file)
+        clean_data = bank_clean_data.clean()
 
-        # Read the CSV file into a DataFrame
-        df = pd.read_csv(csv_file)
+         # save cleaned data to be downloaded
+        file_path = os.path.join(settings.MEDIA_ROOT, 'cleaned_data.csv')
+        clean_data.to_csv(file_path)
 
-        # Load the Excel workbook
-        workbook = load_workbook(excel_file)
+        # add the URL to the cleaned CSV file to the session
+        self.request.session['file_url'] = os.path.join(settings.MEDIA_URL, 'cleaned_data.csv')
 
-        # Add the DataFrame as a new sheet
-        writer = pd.ExcelWriter(excel_file, engine='openpyxl') 
-        writer.book = workbook
-        df.to_excel(writer, sheet_name='Sheet1')
+        # Add a success message
+        messages.success(self.request, 'CSV file has been uploaded and processed.')
 
-        # Save the updated Excel file
-        writer.save()
+        # redirect to the same page
+        return HttpResponseRedirect(self.request.path)
 
-        return render(request, self.template_name, {'message': 'Files uploaded and Excel updated successfully'})
+    
+# class ReviewUpload(TemplateView):
+#     model = amwell_BOA_bank_rec
+#     template_name = 'review_upload.html'
+#     form_class = BankForm
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['file_url'] = self.kwargs['file_url']
+#         return context
