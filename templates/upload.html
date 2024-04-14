@@ -16,30 +16,20 @@
 {% block content %}
             
         <h2>Add CVS file</h2>
-
-        {% for message in messages %}
-            <p class="alert alert-success">{{ message }}</p>
-        
-        {% endfor %}
-
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
             <button type="submit">Run</button>
         </form>
 
-        {% if request.session.file_url %}
-            <a href="{{ request.session.file_url }}" download>Download Cleaned CSV</a>
-        {% endif %}
- 
+    <h3>CSV File Download</h3>
+    
+    <a href="{% url 'download_file' %}" download>Download CSV</a>
 
 
 
 {% endblock %}
+ 
 </main>
-    
-    <footer>
-        <p>&copy; 2022 My Website. All rights reserved.</p>
-    </footer>
 </body>
 </html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download File</title>
+</head>
+<body>
+    {% if uploaded_file %}
+        <h2>Download File</h2>
+        <a href="{{ uploaded_file.file.url }}" download>Download CSV</a>
+    {% else %}
+        <h2>No file uploaded yet</h2>
+    {% endif %}
+</body>
+</html>
