@@ -13,14 +13,6 @@ def upload(request):
         form = FileUploadForm()
     return render(request, 'fileapp/upload.html', {'form': form})
 
-# def download(request):
-#     uploaded_file = UploadedFile.objects.last()
-#     if uploaded_file:
-#         file_path = uploaded_file.file.path
-#         return FileResponse(open(file_path, 'rb'))
-#     else:
-#         return render(request, 'fileapp/download.html')
-
-def download(request):
-    uploaded_file = UploadedFile.objects.last()
+def download(request, file_id):
+    uploaded_file = UploadedFile.objects.get(id=file_id)
     return render(request, 'fileapp/download.html', {'uploaded_file': uploaded_file})

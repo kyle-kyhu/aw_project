@@ -1,0 +1,17 @@
+{% load static %}
+
+
+{% block content %}
+<h2>Dropbox View</h2>
+    <div class="file-list">
+        {% for file in files %}
+        <div class="file-icon">
+            <a href="{% url 'dropbox:file_detail' file.id %}">
+                <img src="{% static 'images/file_icon.png' %}" alt="{{ file.name }}">
+                <p>{{ file.name }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

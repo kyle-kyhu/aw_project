@@ -5,11 +5,19 @@
     <title>Download File</title>
 </head>
 <body>
+{% block content %}
+
+<a href="{% url 'fileapp:upload' %}">Back to Upload File</a>
+
     {% if uploaded_file %}
         <h2>Download File</h2>
         <a href="{{ uploaded_file.file.url }}" download>Download CSV</a>
     {% else %}
         <h2>No file uploaded yet</h2>
     {% endif %}
+
+    
+
+{% endblock %}
 </body>
 </html>
