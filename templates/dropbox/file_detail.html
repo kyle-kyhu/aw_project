@@ -1,9 +1,54 @@
+{% extends "base.html" %}
 
 {% block content %}
 
-<div class="file-detail">
-    <h1>{{ file.name }}</h1>
-    <a href="{{ file.download_url }}">Download</a>
+<h2>File detail</h2>
+
+<!-- Display messages -->
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+
+<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
+    <div class="md:flex">
+        <div class="p-8">
+            <!-- here is the upload file -->
+            <div class="upload-file-2">
+                <form method="post" enctype="multipart/form-data" class="mb-3">
+                    {% csrf_token %}
+                    <input type="file" name="file" required> 
+                    <button 
+                        type="submit" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >Upload CSV file
+                    </button>
+                </form>
+            </div>
+
+            <!-- run the python code in py file -->
+            <div class="run-python-code">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="file" required>
+                    <button 
+                        hx-post="{% url 'dropbox:file_detail' file.id %}" 
+                        hx-trigger="click" hx-swap="outerHTML" 
+                        hx-vals="{csrfmiddlewaretoken: '{{ csrf_token }}'}" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Run
+                    </button>
+                </form>
+            </div>
+
+            <!-- here is the file download div -->
+            <div class="file-detail mt-6">
+                <h2 class="text-xl font-bold">{{ file.name }}</h2>
+                <a href="{{ file.download_url }}" class="text-blue-500">Download</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 

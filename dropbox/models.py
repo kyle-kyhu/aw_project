@@ -12,4 +12,10 @@ class Dropbox(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class PyScript(models.Model):
+    py_file = models.FileField(upload_to='py_file')
+    py_name = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.py_name
