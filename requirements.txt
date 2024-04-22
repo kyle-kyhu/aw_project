@@ -1,7 +1,10 @@
 asgiref==3.7.2
+beautifulsoup4==4.12.3
 black==24.3.0
 click==8.1.7
 Django==5.0.3
+django-bootstrap4==24.1
+django-crispy-forms==2.1
 django-pandas==0.6.6
 et-xmlfile==1.1.0
 mypy-extensions==1.0.0
@@ -14,5 +17,6 @@ platformdirs==4.2.0
 python-dateutil==2.9.0.post0
 pytz==2024.1
 six==1.16.0
+soupsieve==2.5
 sqlparse==0.4.4
 tzdata==2024.1

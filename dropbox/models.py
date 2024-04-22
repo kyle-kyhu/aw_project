@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
 class Dropbox(models.Model):
     file = models.FileField(upload_to='files/')
     name = models.CharField(max_length=100, blank=True)
@@ -19,3 +19,10 @@ class PyScript(models.Model):
 
     def __str__(self):
         return self.py_name
+
+class Task_file(models.Model):
+    task_name = models.CharField(max_length=100, blank=True)
+
+    def __str_(self):
+        return self.task_name
+               

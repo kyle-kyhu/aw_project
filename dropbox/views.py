@@ -3,13 +3,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import subprocess
 
-from .models import Dropbox
+from .models import Dropbox, Task_file
 from .forms import FileUploadForm
 
 # view of task files
-def file_list(request):
+def task_file_list(request):
+    tasks = Task_file.objects.all()
     files = Dropbox.objects.all()
-    return render(request, 'dropbox/file_list.html', {'files': files})
+    return render(request, 'dropbox/task_file_list.html', {'tasks': tasks, 'files': files})
 
 
 def file_detail(request, file_id=None):

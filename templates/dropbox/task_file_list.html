@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h2>New Task File List</h2>
+{% for task in tasks %}
+<div class="max-w-md mx-auto bg-blue-500 rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
+    <div class="md:flex">
+            <div class="p-8">
+                <a href="{% url 'dropbox:file_detail' task.id %}">
+                <h3>{{ task.task_name }}</h3>
+            </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
+
+<h2>old file list</h2>
+
+    <!-- <div class="file-list">
+        {% for file in files %} 
+        <div class="file-icon">
+            <a href="{% url 'dropbox:file_detail' file.id %}">
+                <img src="{% static 'images/search-file_404236.png' %}" alt="{{ file.name }}">
+                <p>{{ file.file }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div> -->
+
+{% endblock content %}
