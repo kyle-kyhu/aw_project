@@ -1,10 +1,38 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.http import FileResponse
 import subprocess
 
 from .models import Dropbox, Task_file
 from .forms import FileUploadForm
+
+from .models import xfile
+from .forms import UploadXfileForm
+
+
+def upload_xfile(request):
+    if request.method == 'POST':
+        form = UploadXfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            instance = xfile(name=request.FILES['file'].name, data=request.FILES['file'].read())
+            instance.save()
+            return redirect('dropbox:xfilelist')  # Redirect to the xfilelist page without passing any arguments
+    else:
+        form = UploadXfileForm()
+    return render(request, 'dropbox/upload.html', {'form': form})
+
+def xfilelist(request):
+    files = xfile.objects.all()
+    return render(request, 'dropbox/xfilelist.html', {'files': files})
+
+
+def download_xfile(request, file_id):
+    file = get_object_or_404(xfile, id=file_id)
+    response = FileResponse(file.data, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename={file.name}'
+    return response
+
 
 # view of task files
 def task_file_list(request):

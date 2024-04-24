@@ -1,0 +1,26 @@
+<!-- create html from xfilelist method in views.py listing all files in the xfile table of the database -->
+
+html
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Files</h2>
+<table>
+    <tr>
+        <th>File Name</th>
+        <th>Download</th>
+    </tr>
+    {% for file in files %}
+    <tr>
+        <td>{{ file.name }}</td>
+        <td><a href="{% url 'dropbox:download' file.id %}" download>Download</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
+
+<!-- 
+ -->
+
+
+

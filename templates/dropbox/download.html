@@ -1,0 +1,8 @@
+<a href="{% url 'dropbox:upload' %}">Back to Upload File</a>
+
+{% if file %}
+    <h2>Download File</h2>
+    <a href="{% url 'dropbox:download' file.id %}" download>Download CSV</a>
+{% else %}
+    <h2>No file uploaded yet</h2>
+{% endif %}

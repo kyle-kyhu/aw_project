@@ -12,6 +12,13 @@ class Dropbox(models.Model):
 
     def __str__(self):
         return self.name
+    
+class xfile(models.Model):
+    name = models.CharField(max_length=255)
+    data = models.BinaryField()
+
+    def __str__(self):
+        return self.name
 
 class PyScript(models.Model):
     py_file = models.FileField(upload_to='py_file')
