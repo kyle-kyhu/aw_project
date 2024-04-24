@@ -59,24 +59,6 @@ def download(request, file_id):
     return render(request, 'dropbox/file_detail.html', {'uploaded_file': uploaded_file})
 
 
-"""run script stand alone w/ message in view"""
-# def run_script(request):
-#     if request.method == 'POST':
-#         file = request.FILES['file']
-#         dropbox = Dropbox(file=file)
-#         dropbox.save()
-
-#         # Execute the Python script within the file_detail directory
-#         try:
-#             subprocess.run(['python', 'files/sandbox1.py', dropbox.file.path], check=True)
-#             return render(request, 'file_detail.html', {'file': dropbox, 'message': "Script executed successfully!"})
-#         except subprocess.CalledProcessError as e:
-#             return render(request, 'file_detail.html', {'file': dropbox, 'message': f"Error executing script: {e}"})
-#     else:
-#         return HttpResponse("Method not allowed", status=405)
-    
-from django.shortcuts import redirect
-
 def run_script(request):
     if request.method == 'POST':
         file = request.FILES['file']
@@ -93,6 +75,25 @@ def run_script(request):
         return redirect('dropbox:file_detail', file_id=dropbox.id)
     else:
         return HttpResponse("Method not allowed", status=405)
+
+
+"""run script stand alone w/ message in view"""
+# def run_script(request):
+#     if request.method == 'POST':
+#         file = request.FILES['file']
+#         dropbox = Dropbox(file=file)
+#         dropbox.save()
+
+#         # Execute the Python script within the file_detail directory
+#         try:
+#             subprocess.run(['python', 'files/sandbox1.py', dropbox.file.path], check=True)
+#             return render(request, 'file_detail.html', {'file': dropbox, 'message': "Script executed successfully!"})
+#         except subprocess.CalledProcessError as e:
+#             return render(request, 'file_detail.html', {'file': dropbox, 'message': f"Error executing script: {e}"})
+#     else:
+#         return HttpResponse("Method not allowed", status=405)
+    
+
 
 
 
