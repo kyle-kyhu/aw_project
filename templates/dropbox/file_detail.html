@@ -11,66 +11,34 @@
     </div>
     {% endfor %}
 
-<!-- <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
-    <div class="md:flex">
-        <div class="p-8">
-            here is the upload file
-            <div class="upload-file-2">
-                <form method="post" enctype="multipart/form-data" class="mb-3">
-                    {% csrf_token %}
-                    <input type="file" name="file" required> 
-                    <button 
-                        type="submit" 
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >Upload CSV file
-                    </button> 
-                </form>
-            </div> -->
-
 <!-- run the python code in py file -->
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
     <div class="md:flex">
         <div class="p-8">
             <div class="run-python-code">
+                <!-- Display file upload form -->
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form }}
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Run Python Script</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Upload CSV File</button>
                 </form>
             </div>
-        </div>
-        
-    </div>
-    <div class="file-detail mt-6">
-        <h2 class="text-xl font-bold">{{ file.name }}</h2>
-        <a href="{{ file.download_url }}" class="text-blue-500">Download</a>
-    </div>
-</div>          
-
-            <!-- run the python code in py file -->
-            <!-- <div class="run-python-code">
-                <button 
-                        hx-post="{% url 'dropbox:file_detail' file.id %}" 
-                        hx-trigger="click" hx-swap="outerHTML" 
-                        hx-vals="{csrfmiddlewaretoken: '{{ csrf_token }}'}" 
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Run Python Script
-                    </button>
-                 <form method="post" enctype="multipart/form-data">
+            <!-- If file is provided, display run script button and download link -->
+            {% if file %}
+            <div class="file-detail mt-6">
+                
+                <form method="post" action="{% url 'dropbox:run_script' file.id %}">
                     {% csrf_token %}
-                    <input type="file" name="file" required>
-                    <button 
-                        hx-post="{% url 'dropbox:file_detail' file.id %}" 
-                        hx-trigger="click" hx-swap="outerHTML" 
-                        hx-vals="{csrfmiddlewaretoken: '{{ csrf_token }}'}" 
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Run Python Script
-                    </button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Run Python Script</button>
+                    <a href="{% url 'dropbox:download' file.id %}" class="text-blue-500">Download - {{ file.name }}</a>
                 </form>
-            </div> -->
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-            <!-- here is the file download div -->
-            
+
 
 
 

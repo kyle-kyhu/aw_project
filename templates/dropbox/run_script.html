@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>run_script html</h2>
+
+<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
+    <div class="md:flex">
+        <div class="p-8">
+            <div class="run-python-code">
+                <!-- Display file upload form -->
+                <form method="post" enctype="multipart/form-data" action="{% url 'dropbox:run_script' file_id=file.id %}">
+                    {% csrf_token %}
+                    <label for="file">Upload CSV File:</label>
+                    <input type="file" name="file" id="file" required>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Upload & Run Python Script</button>
+                </form>
+            </div>
+            <!-- If file is provided, display download link -->
+            {% if file %}
+            <div class="file-detail mt-6">
+                <h2 class="text-xl font-bold">{{ file.name }}</h2>
+                <a href="{% url 'dropbox:download' file.id %}" class="text-blue-500">Download</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
