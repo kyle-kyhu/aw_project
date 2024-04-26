@@ -3,6 +3,7 @@ from django.db import models
 
 class Dropbox(models.Model):
     file = models.FileField(upload_to='files/')
+    excel = models.FileField(upload_to='files/', null=True)
     name = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -12,6 +13,7 @@ class Dropbox(models.Model):
 
     def __str__(self):
         return self.name
+    
     
 class xfile(models.Model):
     name = models.CharField(max_length=255)

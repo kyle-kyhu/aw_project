@@ -6,6 +6,13 @@ class FileUploadForm(forms.ModelForm):
         model = Dropbox
         fields = ['file']
 
-class UploadXfileForm(forms.Form):
-    file = forms.FileField()
+class ExcelUploadForm(forms.ModelForm):
+    class Meta:
+        model = Dropbox
+        fields = ['excel']
+
+                      
+
+# class UploadXfileForm(forms.Form):
+#     file = forms.FileField()
 
