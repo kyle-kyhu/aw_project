@@ -8,11 +8,15 @@ class Dropbox(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        self.name = self.file.name
+        if self.excel:  # Ensure 'excel' is present before using its name
+            self.name = self.excel.name
+        else:
+            self.name = self.file.name  # Fall back to the CSV name if no Excel
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
     
     
 class xfile(models.Model):

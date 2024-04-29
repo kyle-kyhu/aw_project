@@ -3,7 +3,11 @@ from django.contrib import admin
 from .models import Dropbox, PyScript, Task_file, xfile
 
 class DropboxAdmin(admin.ModelAdmin):
-    list_display = ('file', 'created_at')
+    list_display = (
+        'file', 
+        'created_at',
+        'excel',
+        )
     list_filter = ('created_at',)
 
 

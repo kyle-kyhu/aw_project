@@ -95,7 +95,6 @@ import glob
 from .models import Dropbox, Task_file
 from .forms import FileUploadForm, ExcelUploadForm
 
-# ListView for listing tasks and files
 class TaskFileListView(ListView):
     template_name = 'dropbox/task_file_list.html'
 
@@ -104,13 +103,12 @@ class TaskFileListView(ListView):
         context['tasks'] = Task_file.objects.all()
         context['files'] = Dropbox.objects.all()
         return context
-    
+
     def get_queryset(self):
         tasks = Task_file.objects.all()
         files = Dropbox.objects.all()
         return {'tasks': tasks, 'files': files}
 
-# FormView for handling file details and uploads
 class FileDetailView(FormView):
     template_name = 'dropbox/file_detail.html'
     form_class = FileUploadForm
@@ -122,7 +120,9 @@ class FileDetailView(FormView):
         file_instance = get_object_or_404(Dropbox, id=file_id) if file_id else None
         context.update({
             'excel_form': self.second_form_class(self.request.POST or None),
-            'file': file_instance
+            'file': file_instance,
+            'show_run_script': self.request.session.pop('show_run_script', False),  # Pop is used here
+            'script_executed': self.request.session.get('script_executed', False)  # Get is used here
         })
         return context
 
@@ -132,15 +132,13 @@ class FileDetailView(FormView):
             csv_instance = form.save()
             excel_instance = excel_form.save()
             messages.success(self.request, "Your CSV and Excel files uploaded successfully!")
-            # Redirect to the detail view where the user can choose to run the script
+            self.request.session['show_run_script'] = True  # Set the flag when files are saved
             return redirect('dropbox:file_detail', file_id=csv_instance.id)
         else:
             messages.error(self.request, "Error uploading files. Please ensure both files are provided and try again.")
             return self.form_invalid(form)
 
-# View for running a script
 class RunScriptView(View):
-
     def post(self, request, *args, **kwargs):
         dropbox = get_object_or_404(Dropbox, id=self.kwargs.get('file_id'))
         if dropbox.file:
@@ -148,17 +146,31 @@ class RunScriptView(View):
                 script_path = os.path.join(settings.MEDIA_ROOT, 'files/sandbox1.py')
                 env = os.environ.copy()
                 env['DJANGO_SETTINGS_MODULE'] = 'django_project.settings'
-                subprocess.run(['python', script_path, dropbox.file.path], check=True, env=env)
-                messages.success(request, "Yay! The script executed successfully!")
+                
+                # Run the Python script
+                result = subprocess.run(['python', script_path, dropbox.file.path], check=True, env=env)
+                
+                if result.returncode == 0:  # Check if the script ran successfully
+                    messages.success(request, "Script executed successfully!")
+
+                    # Find the updated Excel file
+                    excel_files = glob.glob(os.path.join(settings.MEDIA_ROOT, 'files', '*.xlsx'))
+                    if excel_files:
+                        most_recent_excel_path = max(excel_files, key=os.path.getctime)
+                        
+                        # Update the model's excel attribute
+                        dropbox.excel.name = os.path.basename(most_recent_excel_path)  # Use the file name directly
+                        dropbox.save()  # Save the model to update it in the database
+
+                    request.session['script_executed'] = True  # Set session flag for visibility
             except subprocess.CalledProcessError as e:
                 messages.error(request, f"Error executing script: {e}")
         else:
             messages.error(request, "No file has been uploaded.")
         return redirect('dropbox:file_detail', file_id=self.kwargs.get('file_id'))
 
-# View for downloading a file
+
 class DownloadView(View):
-    
     def get(self, request, *args, **kwargs):
         files_directory = os.path.join(os.getcwd(), 'media', 'files')
         xlsx_files = glob.glob(os.path.join(files_directory, '*.xlsx'))
@@ -171,3 +183,5 @@ class DownloadView(View):
         else:
             messages.error(request, "No Excel files found in the media/files directory.")
             return redirect('dropbox:file_detail', file_id=self.kwargs.get('file_id'))
+
+

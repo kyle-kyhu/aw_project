@@ -12,31 +12,50 @@
     {% endfor %}
 
 <!-- upload csv file -->
-<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
+<!-- Upload CSV file -->
+<div class="max-w-3xl mx-auto bg-gray-800 rounded-xl shadow-lg overflow-hidden mt-6">
     <div class="md:flex">
-        <div class="p-8">
-            <div class="run-python-code">
-                <!-- Display file upload form -->
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
+        <div class="p-8 text-white">
+            <h2 class="text-2xl font-bold mb-4">Upload Files</h2>
+
+            <!-- Form for file upload -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-4">
                     {{ form }}
+                </div>
+                
+                <div class="mb-4">
                     {{ excel_form }}
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>
-                </form>
-            </div>
-            <!-- If file is provided, display run script button and download link -->
-            {% if file %}
-            <div class="file-detail mt-6">
+                </div>
+
+                <button class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded" type="submit">Save</button>
+            </form>
+
+            <!-- Show the Run Python Script button only if the files have been saved successfully -->
+            {% if file and show_run_script %}
+            <div class="mt-8">
                 <form method="post" action="{% url 'dropbox:run_script' file.id %}">
                     {% csrf_token %}
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Run Python Script</button>
-                    <a href="{% url 'dropbox:download' file.id %}" class="text-blue-500">Download - {{ file.name }}</a>
+                    <button class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded" type="submit">Run Python Script</button>
                 </form>
+            </div>
+            {% endif %}
+
+            <!-- If script executed, show download link in a separate card -->
+            {% if file and script_executed %}
+            <div class="bg-gray-700 rounded-lg p-4 shadow mt-10">
+                <h4 class="text-lg font-bold mb-2">Download</h4>
+                <a href="{% url 'dropbox:download' file.id %}" class="text-blue-400">{{ file.excel.name }}</a>
             </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+</div>
+
 
 
 
