@@ -1,34 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
-
-
+<head>
+    <title>New Dashboard</title>
+</head>
+ 
 {% block content %}
-<h2>New Task File List</h2>
-{% for task in tasks %}
-<div class="max-w-md mx-auto bg-blue-500 rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
-    <div class="md:flex">
-            <div class="p-8">
-                <a href="{% url 'dropbox:file_detail' task.id %}">
-                <h3>{{ task.task_name }}</h3>
-            </div>
-    </div>
-</div>
-{% endfor %}
-
-
-
-
-<h2>old file list</h2>
-
-    <!-- <div class="file-list">
-        {% for file in files %} 
-        <div class="file-icon">
-            <a href="{% url 'dropbox:file_detail' file.id %}">
-                <img src="{% static 'images/search-file_404236.png' %}" alt="{{ file.name }}">
-                <p>{{ file.file }}</p>
+<body>
+    <div class="container mx-auto p-6">
+        <div class="bg-white p-4 rounded shadow-md">
+          <h1 class="text-2xl font-bold text-gray-800 mb-4">Dashboard</h1>
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Wrap the button with an <a> tag to make it navigable -->
+            <a href="{% url 'dropbox:file_detail' %}" class="block">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Bank Rec</button>
             </a>
+            <!-- Add more buttons following this pattern -->
+          </div>
         </div>
-        {% endfor %}
-    </div> -->
-
+      </div>
+</body>
 {% endblock content %}
